@@ -67,8 +67,9 @@ This command starts the Next.js development server. The application will be avai
 
 Usage
 
-1. Connect to TikTok Live
+1. Connect to TikTok Live Like Counter Tool
 
+   - Open terminal on the root directory of project folder, then run 'npm run dev'.
    - Open your web browser and go to http://localhost:8091.
    - Enter the TikTok username you want to connect to in the input field.
    - Click the "Connect" button.
@@ -78,3 +79,9 @@ Usage
    - Once connected, the app will display the top 5 users who have sent the most likes in real-time.
    - The list will automatically update every 5 seconds.
 
+3. Shuting Down Server, and Clearing Table
+
+   - Once connected, you will see button "Disconnect & Clear Table" - This will disconnet from the live and clear/reset the Top 5 Likers table.
+   - Once connected, you will see button "Shutdown Server" - This will shutdown your 'npm run dev' server (terminal process), once press you may close your browser window safely.
+
+Note: You will have to start your server again "npm run dev" if "Shutdown Server" is pressed.

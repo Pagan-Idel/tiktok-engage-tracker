@@ -4,6 +4,7 @@ import { WebcastPushConnection } from 'tiktok-live-connector';
 type LikeCountMap = Map<string, number>;
 
 let likeCounts: LikeCountMap = new Map();
+let tiktokConnection: WebcastPushConnection | null = null;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -13,7 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Username is required' });
     }
 
-    const tiktokConnection = new WebcastPushConnection(username);
+    // Disconnect existing connection if any
+    if (tiktokConnection) {
+      tiktokConnection.disconnect();
+      tiktokConnection = null;
+      likeCounts.clear();
+      console.info('Disconnected and cleared likeCounts map');
+    }
+
+    // Create a new connection
+    tiktokConnection = new WebcastPushConnection(username);
 
     try {
       const state = await tiktokConnection.connect();
@@ -33,8 +43,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Failed to connect', err);
       res.status(500).json({ error: 'Failed to connect' });
     }
+  } else if (req.method === 'DELETE') {
+    if (tiktokConnection) {
+      tiktokConnection.disconnect();
+      tiktokConnection = null;
+    }
+    likeCounts.clear();
+    res.status(200).json({ message: 'Disconnected and cleared likeCounts map' });
   } else {
-    res.setHeader('Allow', ['POST']);
+    res.setHeader('Allow', ['POST', 'DELETE']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
