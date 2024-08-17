@@ -39,11 +39,13 @@ Follow these steps to set up and run the project locally:
 
 1. Download the Latest Release
 
-   Download the latest release of the project from the Releases page on GitHub. Unzip the downloaded file to a location on your machine.
+   Download the latest release of the project from the Releases page on GitHub: https://github.com/Pagan-Idel/tiktok-live-tool/releases
+   Under Assets - download the zip.
+   Unzip the downloaded file to a location on your machine.
 
 2. Navigate to the Project Directory
 
-   In your terminal, go to the project's directory:
+   In a npm ready terminal, go to the project's directory:
 
    cd tiktok-live-like-tracker
 
