@@ -9,9 +9,6 @@ Table of Contents
 - Installation
 - Running the Application
 - Usage
-- Project Structure
-- Contributing
-- License
 
 Features
 - Connect to a TikTok Live chat room by username.
@@ -28,14 +25,14 @@ Before you begin, make sure you have the following installed:
 
 To check if Node.js and npm are installed, open your terminal (Command Prompt, PowerShell, or Terminal) and type:
 
-node -v
-npm -v
+node -v (enter)
+npm -v (enter)
 
 You should see version numbers for both Node.js and npm. If not, please follow the installation instructions provided on the Node.js website.
 
 Installation
 
-Follow these steps to set up and run the project locally:
+Follow these steps to set up and run TikTok Live Like Tracker locally:
 
 1. Download the Latest Release
 
@@ -45,15 +42,15 @@ Follow these steps to set up and run the project locally:
 
 2. Navigate to the Project Directory
 
-   In a npm ready terminal, go to the project's directory:
+   In a npm ready terminal, go to the project's root directory:
 
-   cd tiktok-live-like-tracker
+   cd tiktok-live-like-tracker (enter)
 
 3. Install Dependencies
 
    Install the necessary dependencies using npm:
 
-   npm install
+   npm install (enter)
 
    This command will install all the packages required by the project, as specified in the package.json file.
 
@@ -61,27 +58,25 @@ Running the Application
 
 Once the dependencies are installed, you can start the development server:
 
-npm run dev
+npm run dev (enter)
 
-This command starts the Next.js development server. The application will be available at http://localhost:8091.
+This command starts the server. Then you can go to the application on any browser at http://localhost:8091.
 
 Usage
 
 1. Connect to TikTok Live Like Counter Tool
 
-   - Open terminal on the root directory of project folder, then run 'npm run dev'.
-   - Open your web browser and go to http://localhost:8091.
    - Enter the TikTok username you want to connect to in the input field.
    - Click the "Connect" button.
 
 2. View Top 5 Likers
 
-   - Once connected, the app will display the top 5 users who have sent the most likes in real-time.
-   - The list will automatically update every 5 seconds.
+   - Once connected, the app will display the top 5 users who have sent the most likes in the specified's users TikTok Live in real-time.
+   - The list will automatically update every 3 seconds.
 
 3. Shuting Down Server, and Clearing Table
 
    - Once connected, you will see button "Disconnect & Clear Table" - This will disconnet from the live and clear/reset the Top 5 Likers table.
-   - Once connected, you will see button "Shutdown Server" - This will shutdown your 'npm run dev' server (terminal process), once press you may close your browser window safely.
+   - At any time, you will see button "Shutdown Server" - This will shutdown your server (npm run dev process), once pressed you may close your browser window safely.
 
-Note: You will have to start your server again "npm run dev" if "Shutdown Server" is pressed.
+Note: You will have to start your server again "npm run dev" if "Shutdown Server" is pressed (recommended).

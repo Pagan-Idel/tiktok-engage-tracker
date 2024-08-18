@@ -58,7 +58,7 @@ const Home = () => {
       await fetch('/api/shutdown', {
         method: 'POST',
       });
-      window.close();
+      setError('Shutdown Successful - OK to close window.'); 
     } catch (error) {
       setError('An error occurred while shuting down'); // Set error message
       console.error('An error occurred:', error);
@@ -77,8 +77,10 @@ const Home = () => {
           setError('Failed to fetch top likers'); // Set error message
         }
       } catch (error) {
+        if (!connected) {
         setError('An error occurred while fetching top likers'); // Set error message
         console.error('An error occurred:', error);
+        }
       }
     };
 
@@ -112,6 +114,12 @@ const Home = () => {
             }}
           >
             Connect
+          </button>
+          <button
+            onClick={handleShutdown}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Shutdown Server
           </button>
         </div>
       ) : (
