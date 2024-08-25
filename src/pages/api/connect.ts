@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { WebcastPushConnection } from 'tiktok-live-connector';
 import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 let tiktokConnection: WebcastPushConnection | null = null;
 
