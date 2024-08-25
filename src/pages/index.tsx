@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 interface Liker {
   username: string;
-  likes: number;
+  total_likes: number;
 }
 
 const Home = () => {
@@ -78,15 +78,17 @@ const Home = () => {
         }
       } catch (error) {
         if (!connected) {
-        setError('An error occurred while fetching top likers'); // Set error message
-        console.error('An error occurred:', error);
+          setError('An error occurred while fetching top likers'); // Set error message
+          console.error('An error occurred:', error);
         }
       }
     };
-
+  
+    fetchTopLikers(); // Fetch immediately on mount
     const interval = setInterval(fetchTopLikers, 3000);
     return () => clearInterval(interval);
   }, [connected]);
+  
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto' }}>
@@ -137,7 +139,7 @@ const Home = () => {
                 }}
               >
                 <span>{liker.username}</span>
-                <span>{liker.likes} likes</span>
+                <span>{liker.total_likes} likes</span>
               </li>
             ))}
           </ul>
