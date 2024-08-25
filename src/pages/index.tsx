@@ -117,12 +117,12 @@ const Home = () => {
           >
             Connect
           </button>
-          <button
+          {/*<button
             onClick={handleShutdown}
             style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
           >
             Shutdown Server
-          </button>
+          </button>*/}
         </div>
       ) : (
         <div>
