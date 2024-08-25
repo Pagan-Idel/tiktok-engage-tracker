@@ -52,18 +52,18 @@ const Home = () => {
     }
   };
   
-  const handleShutdown = async () => {
-    setConnected(false);
-    try {
-      await fetch('/api/shutdown', {
-        method: 'POST',
-      });
-      setError('Shutdown Successful - OK to close window.'); 
-    } catch (error) {
-      setError('An error occurred while shuting down'); // Set error message
-      console.error('An error occurred:', error);
-    }
-  };
+  // const handleShutdown = async () => {
+  //   setConnected(false);
+  //   try {
+  //     await fetch('/api/shutdown', {
+  //       method: 'POST',
+  //     });
+  //     setError('Shutdown Successful - OK to close window.'); 
+  //   } catch (error) {
+  //     setError('An error occurred while shuting down'); // Set error message
+  //     console.error('An error occurred:', error);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchTopLikers = async () => {
@@ -149,12 +149,12 @@ const Home = () => {
           >
             Disconnect & Clear Table
           </button><br></br>
-          <button
+          {/*<button
             onClick={handleShutdown}
             style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
           >
             Shutdown Server
-          </button>
+          </button>*/}
         </div>
       )}
     </div>
