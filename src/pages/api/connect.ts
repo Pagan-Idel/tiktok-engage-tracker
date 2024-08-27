@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { WebcastPushConnection } from 'tiktok-live-connector';
-import mysql from 'mysql2/promise';
+import mysql, { RowDataPacket } from 'mysql2/promise';
+
+interface FollowCheckResult extends RowDataPacket {
+  count: number;
+}
 
 let tiktokConnection: WebcastPushConnection | null = null;
 
@@ -11,11 +15,41 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
-async function updateLikes(username: string, likeCount: number) {
+async function updatePoints(username: string, likeCount: number) {
   // Insert or update the like count directly in the MySQL database
+  await pool.query('USE tiktok_likes;');
   await pool.execute(
     'INSERT INTO like_counts (username, likes) VALUES (?, ?) ON DUPLICATE KEY UPDATE likes = likes + VALUES(likes)',
     [username, likeCount]
+  );
+}
+async function ensureUserExists(username: string) {
+  const [rows] = await pool.query<FollowCheckResult[]>(
+    'SELECT COUNT(*) as count FROM like_counts WHERE username = ?',
+    [username]
+  );
+
+  if (rows[0].count === 0) {
+    // Insert the user into like_counts if they don't exist
+    await pool.execute(
+      'INSERT INTO like_counts (username, likes) VALUES (?, ?)',
+      [username, 0]  // Initially, set likes to 0
+    );
+  }
+}
+async function hasFollowed(username: string): Promise<boolean> {
+  await pool.query('USE tiktok_likes;');
+  const [rows] = await pool.query<FollowCheckResult[]>(
+    'SELECT COUNT(*) as count FROM followed WHERE username = ?',
+    [username]
+  );
+  return rows[0].count > 0;
+}
+async function markAsFollowed(username: string) {
+  await pool.query('USE tiktok_likes;');
+  await pool.execute(
+    'INSERT INTO followed (username) VALUES (?)',
+    [username]
   );
 }
 
@@ -40,8 +74,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Handle incoming 'like' events
       tiktokConnection.on('like', async (data) => {
-        await updateLikes(data.uniqueId, data.likeCount);
+        await updatePoints(data.uniqueId, data.likeCount);
       });
+      // Handle incoming 'follow' events
+      tiktokConnection.on('follow', async (data) => {
+        await ensureUserExists(data.uniqueId);  // Ensure the user exists before marking as followed
+        const alreadyFollowed = await hasFollowed(data.uniqueId);
+        if (!alreadyFollowed) {
+          await markAsFollowed(data.uniqueId);
+          await updatePoints(data.uniqueId, 50);  // Add 50 points for following
+        }
+      });
+
 
       tiktokConnection.on('error', (err) => {
         console.error('Error!', err);
@@ -51,14 +95,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Failed to connect', err);
       res.status(500).json({ error: 'Failed to connect' });
     }
-  } else if (req.method === 'DELETE') {
+  } else if (req.method === 'DELETE' && req.headers.closetype == 'disconnect') {
     // Disconnect and clean up
     if (tiktokConnection) {
       tiktokConnection.disconnect();
       tiktokConnection = null;
     }
-
-    // Clear the like_counts table (if necessary)
+    await pool.query('USE tiktok_likes;');
+    await pool.execute('DELETE FROM followed');
+    await pool.execute('DELETE FROM like_counts');
+    res.status(200).json({ message: 'Disconnected and cleared likeCounts table' });
+  } else if (req.method === 'DELETE' && req.headers.closetype == 'table') {
+    await pool.query('USE tiktok_likes;');
+    await pool.execute('DELETE FROM followed');
     await pool.execute('DELETE FROM like_counts');
     res.status(200).json({ message: 'Disconnected and cleared likeCounts table' });
   } else {

@@ -37,6 +37,9 @@ const Home = () => {
     try {
       const response = await fetch('/api/connect', {
         method: 'DELETE',
+        headers: {
+          'closetype': 'disconnect'
+        }
       });
   
       if (response.ok) {
@@ -52,18 +55,20 @@ const Home = () => {
     }
   };
   
-  // const handleShutdown = async () => {
-  //   setConnected(false);
-  //   try {
-  //     await fetch('/api/shutdown', {
-  //       method: 'POST',
-  //     });
-  //     setError('Shutdown Successful - OK to close window.'); 
-  //   } catch (error) {
-  //     setError('An error occurred while shuting down'); // Set error message
-  //     console.error('An error occurred:', error);
-  //   }
-  // };
+  const handleClearTable = async () => {
+    try {
+      const response = await fetch('/api/connect', {
+        method: 'DELETE',
+        headers: {
+          'closetype': 'table'
+        }
+      });
+      setError('Table Cleared'); 
+    } catch (error) {
+      setError('An error occurred while clearing table'); // Set error message
+      console.error('An error occurred:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchTopLikers = async () => {
@@ -139,22 +144,22 @@ const Home = () => {
                 }}
               >
                 <span>{liker.username}</span>
-                <span>{liker.total_likes} likes</span>
+                <span>{liker.total_likes} points</span>
               </li>
             ))}
           </ul>
           <button
+            onClick={handleClearTable}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Clear Table
+          </button><br></br>
+          <button
             onClick={handleDisconnect}
             style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
           >
-            Disconnect & Clear Table
-          </button><br></br>
-          {/*<button
-            onClick={handleShutdown}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-          >
-            Shutdown Server
-          </button>*/}
+            Disconnect
+          </button>
         </div>
       )}
     </div>

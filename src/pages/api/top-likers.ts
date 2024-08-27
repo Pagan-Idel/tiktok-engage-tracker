@@ -10,6 +10,7 @@ const pool = mysql.createPool({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
+    await pool.query('USE tiktok_likes;');
     const [rows] = await pool.query(`
     SELECT username, SUM(likes) as total_likes
     FROM like_counts
