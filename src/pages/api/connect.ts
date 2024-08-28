@@ -15,38 +15,43 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
-async function updatePoints(username: string, likeCount: number) {
-  // Insert or update the like count directly in the MySQL database
+async function ensureUserExists(username: string) {
   await pool.query('USE tiktok_likes;');
+  // Check if the user exists in either table
+  const [rows] = await pool.query<FollowCheckResult[]>(
+    'SELECT COUNT(*) as count FROM users WHERE username = ?',
+    [username]
+  );
+
+  if (rows[0].count === 0) {
+    // Insert the user into users if they don't exist
+    await pool.execute('INSERT INTO users (username) VALUES (?)', [username]);
+  }
+}
+
+async function updatePoints(username: string, likeCount: number) {
+  await pool.query('USE tiktok_likes;');
+  // Ensure user exists in users table
+  await ensureUserExists(username);
   await pool.execute(
     'INSERT INTO like_counts (username, likes) VALUES (?, ?) ON DUPLICATE KEY UPDATE likes = likes + VALUES(likes)',
     [username, likeCount]
   );
 }
-async function ensureUserExists(username: string) {
-  const [rows] = await pool.query<FollowCheckResult[]>(
-    'SELECT COUNT(*) as count FROM like_counts WHERE username = ?',
-    [username]
-  );
 
-  if (rows[0].count === 0) {
-    // Insert the user into like_counts if they don't exist
-    await pool.execute(
-      'INSERT INTO like_counts (username, likes) VALUES (?, ?)',
-      [username, 0]  // Initially, set likes to 0
-    );
-  }
-}
 async function hasFollowed(username: string): Promise<boolean> {
   await pool.query('USE tiktok_likes;');
+  await ensureUserExists(username);
   const [rows] = await pool.query<FollowCheckResult[]>(
     'SELECT COUNT(*) as count FROM followed WHERE username = ?',
     [username]
   );
   return rows[0].count > 0;
 }
+
 async function markAsFollowed(username: string) {
   await pool.query('USE tiktok_likes;');
+  await ensureUserExists(username);
   await pool.execute(
     'INSERT INTO followed (username) VALUES (?)',
     [username]
@@ -104,11 +109,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await pool.query('USE tiktok_likes;');
     await pool.execute('DELETE FROM followed');
     await pool.execute('DELETE FROM like_counts');
+    await pool.execute('DELETE FROM users');
     res.status(200).json({ message: 'Disconnected and cleared likeCounts table' });
   } else if (req.method === 'DELETE' && req.headers.closetype == 'table') {
     await pool.query('USE tiktok_likes;');
     await pool.execute('DELETE FROM followed');
     await pool.execute('DELETE FROM like_counts');
+    await pool.execute('DELETE FROM users');
     res.status(200).json({ message: 'Disconnected and cleared likeCounts table' });
   } else {
     res.setHeader('Allow', ['POST', 'DELETE']);
