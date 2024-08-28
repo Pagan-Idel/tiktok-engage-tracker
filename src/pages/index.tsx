@@ -97,7 +97,7 @@ const Home = () => {
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>TikTok Live Like Tracker</h1>
+      <h1 style={{ textAlign: 'center', color: '#333' }}>TikTok Live Engage Tracker</h1>
       {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>} {/* Display error message */}
       {!connected ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -131,7 +131,7 @@ const Home = () => {
         </div>
       ) : (
         <div>
-          <h2 style={{ color: '#555' }}>Top 5 Likers</h2>
+          <h2 style={{ color: '#555' }}>Top 5 Users</h2>
           <ul style={{ listStyleType: 'none', padding: '0' }}>
             {topLikers.map((liker) => (
               <li
