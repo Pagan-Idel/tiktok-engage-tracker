@@ -87,10 +87,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const alreadyFollowed = await hasFollowed(data.uniqueId);
         if (!alreadyFollowed) {
           await markAsFollowed(data.uniqueId);
-          await updatePoints(data.uniqueId, 50);  // Add 50 points for following
+          await updatePoints(data.uniqueId, 100);  // Add 50 points for following
         }
       });
 
+      // Handle incoming 'share' events
+      tiktokConnection.on('share', async (data) => {
+        await updatePoints(data.uniqueId, 50);
+      });
 
       tiktokConnection.on('error', (err) => {
         console.error('Error!', err);

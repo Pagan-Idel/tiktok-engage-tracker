@@ -9,7 +9,7 @@ const Home = () => {
   const [username, setUsername] = useState<string>('');
   const [connected, setConnected] = useState<boolean>(false);
   const [topLikers, setTopLikers] = useState<Liker[]>([]);
-  const [error, setError] = useState<string | null>(null); // Add error state
+  const [error, setError] = useState<string | null>(null);
 
   const connectToLive = async () => {
     try {
@@ -23,12 +23,12 @@ const Home = () => {
 
       if (response.ok) {
         setConnected(true);
-        setError(null); // Clear any previous error
+        setError(null);
       } else {
-        setError('Failed to connect'); // Set error message
+        setError('Failed to connect');
       }
     } catch (error) {
-      setError('An error occurred while connecting'); // Set error message
+      setError('An error occurred while connecting');
       console.error('An error occurred:', error);
     }
   };
@@ -41,20 +41,20 @@ const Home = () => {
           'closetype': 'disconnect'
         }
       });
-  
+
       if (response.ok) {
         console.log('Disconnected and cleared likeCounts map');
         setConnected(false);
-        setError(null); // Clear any previous error
+        setError(null);
       } else {
-        setError('Failed to disconnect'); // Set error message
+        setError('Failed to disconnect');
       }
     } catch (error) {
-      setError('An error occurred while disconnecting'); // Set error message
+      setError('An error occurred while disconnecting');
       console.error('An error occurred:', error);
     }
   };
-  
+
   const handleClearTable = async () => {
     try {
       const response = await fetch('/api/connect', {
@@ -63,9 +63,9 @@ const Home = () => {
           'closetype': 'table'
         }
       });
-      setError('Table Cleared'); 
+      setError('Table Cleared');
     } catch (error) {
-      setError('An error occurred while clearing table'); // Set error message
+      setError('An error occurred while clearing table');
       console.error('An error occurred:', error);
     }
   };
@@ -77,28 +77,27 @@ const Home = () => {
         if (response.ok) {
           const data = await response.json();
           setTopLikers(data);
-          setError(null); // Clear any previous error
+          setError(null);
         } else {
-          setError('Failed to fetch top likers'); // Set error message
+          setError('Failed to fetch top likers');
         }
       } catch (error) {
         if (!connected) {
-          setError('An error occurred while fetching top likers'); // Set error message
+          setError('An error occurred while fetching top likers');
           console.error('An error occurred:', error);
         }
       }
     };
-  
-    fetchTopLikers(); // Fetch immediately on mount
+
+    fetchTopLikers();
     const interval = setInterval(fetchTopLikers, 3000);
     return () => clearInterval(interval);
   }, [connected]);
-  
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>TikTok Live Engage Tracker</h1>
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>} {/* Display error message */}
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto', backgroundColor: '#e0dbd4', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+      <h1 style={{ textAlign: 'center', color: '#333', marginBottom: '20px', fontSize: '24px' }}>TikTok Live Engage Tracker</h1>
+      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
       {!connected ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <input
@@ -106,7 +105,7 @@ const Home = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter TikTok username"
-            style={{ padding: '10px', fontSize: '16px', marginBottom: '10px', width: '100%' }}
+            style={{ padding: '10px', fontSize: '16px', marginBottom: '10px', width: '100%', borderRadius: '5px', border: '1px solid #ccc' }}
           />
           <button
             onClick={connectToLive}
@@ -118,29 +117,26 @@ const Home = () => {
               border: 'none',
               borderRadius: '5px',
               cursor: 'pointer',
+              marginBottom: '10px'
             }}
           >
             Connect
           </button>
-          {/*<button
-            onClick={handleShutdown}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-          >
-            Shutdown Server
-          </button>*/}
         </div>
       ) : (
-        <div>
-          <h2 style={{ color: '#555' }}>Top 5 Users</h2>
-          <ul style={{ listStyleType: 'none', padding: '0' }}>
+        <div style={{ backgroundColor: '#e0dbd4', padding: '20px', borderRadius: '10px', color: '#333' }}>
+          <h2 style={{ color: '#333', marginBottom: '15px', fontSize: '22px' }}>Top 5 Users</h2>
+          <ul style={{ listStyleType: 'none', padding: '0', marginBottom: '20px' }}>
             {topLikers.map((liker) => (
               <li
                 key={liker.username}
                 style={{
                   padding: '10px',
-                  borderBottom: '1px solid #ddd',
+                  borderBottom: '1px solid #555',
                   display: 'flex',
                   justifyContent: 'space-between',
+                  fontSize: '18px',
+                  color: '#333'
                 }}
               >
                 <span>{liker.username}</span>
@@ -150,13 +146,13 @@ const Home = () => {
           </ul>
           <button
             onClick={handleClearTable}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
           >
             Clear Table
-          </button><br></br>
+          </button>
           <button
             onClick={handleDisconnect}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
           >
             Disconnect
           </button>
