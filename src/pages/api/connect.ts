@@ -17,15 +17,11 @@ const pool = mysql.createPool({
 
 async function ensureUserExists(username: string) {
   await pool.query('USE tiktok_likes;');
-  // Check if the user exists in either table
-  const [rows] = await pool.query<FollowCheckResult[]>(
-    'SELECT COUNT(*) as count FROM users WHERE username = ?',
-    [username]
-  );
-
-  if (rows[0].count === 0) {
-    // Insert the user into users if they don't exist
-    await pool.execute('INSERT INTO users (username) VALUES (?)', [username]);
+  try {
+    // Attempt to insert the user only if they don't exist
+    await pool.execute('INSERT IGNORE INTO users (username) VALUES (?)', [username]);
+  } catch (error) {
+    console.error(`Error ensuring user exists: ${error}`);
   }
 }
 

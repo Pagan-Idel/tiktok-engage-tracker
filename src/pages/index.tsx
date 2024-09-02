@@ -95,8 +95,8 @@ const Home = () => {
   }, [connected]);
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto', backgroundColor: '#e0dbd4', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-      <h1 style={{ textAlign: 'center', color: '#333', marginBottom: '20px', fontSize: '24px' }}>TikTok Live Engage Tracker</h1>
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto', backgroundColor: '#b5aba2', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+      <h1 style={{ textAlign: 'center', color: '#4c4d5f', marginBottom: '20px', fontSize: '24px' }}>TikTok Live Engage Tracker</h1>
       {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
       {!connected ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -105,27 +105,18 @@ const Home = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter TikTok username"
-            style={{ padding: '10px', fontSize: '16px', marginBottom: '10px', width: '100%', borderRadius: '5px', border: '1px solid #ccc' }}
+            style={{ padding: '9px', fontSize: '16px', marginBottom: '10px', width: '96%', borderRadius: '5px', border: '1px solid #ccc' }}
           />
           <button
             onClick={connectToLive}
-            style={{
-              padding: '10px 20px',
-              fontSize: '16px',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              marginBottom: '10px'
-            }}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#4c4d5f', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
           >
             Connect
           </button>
         </div>
       ) : (
-        <div style={{ backgroundColor: '#e0dbd4', padding: '20px', borderRadius: '10px', color: '#333' }}>
-          <h2 style={{ color: '#333', marginBottom: '15px', fontSize: '22px' }}>Top 5 Users</h2>
+        <div style={{ backgroundColor: '#b5aba2', padding: '20px', borderRadius: '10px', color: '#333' }}>
+          <h2 style={{ color: '#4c4d5f', marginBottom: '15px', fontSize: '22px' }}>Top 5 Users</h2>
           <ul style={{ listStyleType: 'none', padding: '0', marginBottom: '20px' }}>
             {topLikers.map((liker) => (
               <li
@@ -136,7 +127,7 @@ const Home = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   fontSize: '18px',
-                  color: '#333'
+                  color: '#4c4d5f'
                 }}
               >
                 <span>{liker.username}</span>
@@ -146,13 +137,13 @@ const Home = () => {
           </ul>
           <button
             onClick={handleClearTable}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#5c2932', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
           >
             Clear Table
           </button>
           <button
             onClick={handleDisconnect}
-            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
+            style={{ marginTop: '10px', padding: '10px', backgroundColor: '#5c2932', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}
           >
             Disconnect
           </button>
