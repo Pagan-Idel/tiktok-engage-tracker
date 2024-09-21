@@ -1,5 +1,14 @@
 @echo off
 
+:: Check for admin rights
+net session >nul 2>&1
+if %ERRORLEVEL% neq 0 (
+    echo This script requires administrator privileges.
+    echo Attempting to restart with administrator rights...
+    powershell -Command "Start-Process '%~0' -Verb runAs"
+    exit /b
+)
+
 rem Change directory to the current folder the BAT file is located in
 cd /d "%~dp0"
 
@@ -7,13 +16,15 @@ echo Checking for MySQL installation...
 
 rem Check for MySQL installation directories
 set MYSQL_INSTALLED=0
+set MYSQL_PATH=""
 for %%D in (
-    "C:\Program Files\MySQL"
-    "C:\Program Files (x86)\MySQL"
+    "C:\Program Files\MySQL\MySQL Server 8.0\bin"
+    "C:\Program Files (x86)\MySQL\MySQL Server 8.0\bin"
 ) do (
     if exist %%D (
         echo MySQL installation found at: %%D
         set MYSQL_INSTALLED=1
+        set MYSQL_PATH=%%D
         goto check_mysql_service
     )
 )
@@ -28,41 +39,55 @@ if %MYSQL_INSTALLED% equ 0 (
 :check_mysql_service
 echo Checking for MySQL service...
 
-rem List of possible MySQL service names
-set MYSQL_SERVICES=MySQL MySQL57 MySQL80 MySQL56 MySQL8
-
-rem Loop through the possible service names to find the running one
-set MYSQL_SERVICE_FOUND=0
-for %%S in (%MYSQL_SERVICES%) do (
-    sc query %%S | find "RUNNING" > nul
-    if %ERRORLEVEL% equ 0 (
-        set MYSQL_SERVICE_FOUND=1
-        set MYSQL_SERVICE_NAME=%%S
-        goto found_mysql_service
-    )
+rem Check if the MySQL executable is in the PATH
+where mysql >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo MySQL not found in PATH. Adding MySQL to PATH for this session...
+    set "PATH=%MYSQL_PATH%;%PATH%"
+    echo MySQL path added.
 )
 
-rem If no MySQL service is running, attempt to start one
-if %MYSQL_SERVICE_FOUND% equ 0 (
-    echo No MySQL service is running. Attempting to start a MySQL service...
-    for %%S in (%MYSQL_SERVICES%) do (
-        sc query %%S | find "STOPPED" > nul
-        if %ERRORLEVEL% equ 0 (
-            net start %%S
-            if %ERRORLEVEL% equ 0 (
-                echo Successfully started MySQL service %%S.
-                set MYSQL_SERVICE_NAME=%%S
-                goto found_mysql_service
-            )
-        )
-    )
-    
-    echo Failed to start any MySQL service. Please start MySQL manually and try again.
+rem Only check the MySQL80 service, since we know it exists
+echo Checking service: MySQL80
+sc query MySQL80 | find "RUNNING" > nul
+if %ERRORLEVEL% equ 0 (
+    echo MySQL80 service is already running.
+    goto found_mysql_service
+)
+
+echo Attempting to start: MySQL80
+net start MySQL80
+if %ERRORLEVEL% equ 2 (
+    echo MySQL80 service is already running.
+    goto found_mysql_service
+)
+if %ERRORLEVEL% equ 0 (
+    echo Successfully started MySQL80 service.
+    goto found_mysql_service
+)
+
+echo Failed to start MySQL80 service. Please start MySQL manually and try again.
+pause
+exit /b
+
+:found_mysql_service
+echo Using MySQL service: MySQL80.
+
+rem Check if the MySQL database exists, using the root credentials from the credentials.json
+mysql -h localhost -u root -proot -e "CREATE DATABASE IF NOT EXISTS tiktok_likes;" 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo Failed to create the database. Exiting...
+    pause
     exit /b
 )
 
-:found_mysql_service
-echo Using MySQL service: %MYSQL_SERVICE_NAME%.
+rem Execute the SQL script to create tables
+mysql -h localhost -u root -proot tiktok_likes < "%~dp0database.sql"
+if %ERRORLEVEL% neq 0 (
+    echo Database creation or update failed. Exiting...
+    pause
+    exit /b
+)
 
 rem Check if npm install has been run by checking for node_modules directory
 if not exist "node_modules" (
@@ -76,13 +101,6 @@ if not exist ".next" (
     echo Building the app...
     npm run build || echo npm run build failed or completed with warnings, continuing...
     exit
-)
-
-rem Check if the MySQL database exists, using the root credentials from the credentials.json
-mysql -h localhost -u root -proot -e "USE tiktok_likes" 2>nul
-if %ERRORLEVEL% neq 0 (
-    echo Database not found, creating...
-    mysql -h localhost -u root -proot < "%~dp0database.sql"
 )
 
 rem Run the service in production mode

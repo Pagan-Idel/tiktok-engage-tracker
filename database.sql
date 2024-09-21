@@ -1,3 +1,9 @@
+-- Create database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS tiktok_likes;
+
+-- Select the database
+USE tiktok_likes;
+
 -- Table for users
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,8 +24,3 @@ CREATE TABLE IF NOT EXISTS followed (
   username VARCHAR(255),
   FOREIGN KEY (username) REFERENCES users(username)
 );
-
--- Optionally clearing data if needed
-DELETE FROM followed;
-DELETE FROM like_counts;
-DELETE FROM users;
