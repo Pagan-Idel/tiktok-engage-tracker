@@ -1,82 +1,72 @@
 
-TikTok Live Like Tracker
+# Tiktok Live Tool
 
-This project is a Next.js application that tracks the top 5 likers in a TikTok Live chat room. It connects to the TikTok Live chat room via a WebSocket connection and displays the users who have sent the most likes in real-time.
+This application tracks likes and follows on TikTok Live events. Follow the instructions below to set up and run the app on Windows.
 
-Table of Contents
-- Features
-- Prerequisites
-- Installation
-- Running the Application
-- Usage
+## Prerequisites
 
-Features
-- Connect to a TikTok Live chat room by username.
-- Track and display the top 5 users who send the most likes in real-time.
-- Automatically updates the list of top likers every 5 seconds.
+### 1. Install MySQL on Windows
 
-Prerequisites
+1. **Download MySQL Installer**:
+   - Go to the official MySQL website: [MySQL Installer for Windows](https://dev.mysql.com/downloads/installer/).
+   - Download the **MySQL Installer (MSI)** — you can choose the **smaller web installer** (which will download additional components as needed) or the **full installer**.
 
-Before you begin, make sure you have the following installed:
+2. **Run the Installer**:
+   - Double-click the downloaded `.msi` file to start the installation.
 
-1. Node.js: You need to have Node.js installed on your machine. Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. You can download and install Node.js from the official website (https://nodejs.org/).
+3. **Choose Setup Type**:
+   - Select **Server only**.
+   - Click **Next**.
+   - Click **Execute**.
+   - Once you see the green checkmark, click **Next**.
 
-2. npm: Node.js comes with npm (Node Package Manager) installed. npm allows you to install the required dependencies for this project.
+4. **Installation**:
+   - **Networking and Type**: Leave the default settings. **Next**.
+   - **Authentication Method**: Choose "Use Legacy Authentication" (this ensures compatibility with older applications that use the MySQL `root` user). **Next**.
+   - **Accounts and Roles**: Set the Root Password to `root`. Repeat the same password. Then **Next**.
+   - **Windows Service**: Make sure "Configure MySQL Server as a Windows Service" is checked. Windows Service Name is set to MYSQL80 and "Standard System Account" is selected. **Next**.
+   - **Server File Permissions**: Select "Yes, grant full access to the user running the Windows Service (if applicable) and the administrators group only. Other users and groups will not have access.". Then **Next**.
+   - **Apply Configuration**: Simply click **Execute**.
 
-To check if Node.js and npm are installed, open your terminal (Command Prompt, PowerShell, or Terminal) and type:
+5. **Product Configuration**:
+   - **Product Configuration**: Simply click **Next**.
 
-node -v (enter)
-npm -v (enter)
+6. **Installation Complete**:
+   - Complete the installation by clicking **Finish**. MySQL will now be installed and configured.
 
-You should see version numbers for both Node.js and npm. If not, please follow the installation instructions provided on the Node.js website.
+### 2. Install Node.js and npm on Windows
+You need Node.js and npm installed to run this app. Follow these steps:
+1. Go to the official Node.js website: https://nodejs.org/
+2. Download the **Windows Installer** for your system (LTS version is recommended for most users).
+3. Run the installer and follow the instructions, making sure to check the box to install **npm** along with Node.js.
+4. Once installed, verify the installation by running the following commands in a command prompt:
+   ```bash
+   node -v
+   npm -v
+   ```
+   You should see version numbers for both Node.js and npm.
 
-Installation
+## Installation
 
-Follow these steps to set up and run TikTok Live Like Tracker locally:
+1. Create a folder called `Documents` in your `C:\` drive if it does not already exist.
+2. Download program from releases at https://github.com/Pagan-Idel/tiktok-live-like-tracker/releases
+3. Unzip and paste the program into your new Documents folder.
 
-1. Download the Latest Release
+## Running the App
 
-   Download the latest release of the project from the Releases page on GitHub: https://github.com/Pagan-Idel/tiktok-live-tool/releases
-   Under Assets - download the zip.
-   Unzip the downloaded file to a location on your machine.
+### Create a Desktop Shortcut
+To make this app easily runnable from your desktop, follow these steps:
+1. Right-click on the `desktop.vbs` file in the program files and select **Send to > Desktop (Create Shortcut)**.
 
-2. Navigate to the Project Directory
+### Running the App (Only done on the first time opening the app)
+1. **First Click**: The first time you click the desktop shortcut, it will run `npm install` to install the necessary dependencies.
+2. **Second Click**: The second time you click the desktop shortcut, it will build the app using `npm run build`.
+3. **Third Click**: The third time you click the desktop shortcut, the app will start and open in your browser.
 
-   In a npm ready terminal, go to the project's root directory:
+Please wait at least 30 seconds for the app to start on your browser the very first time running it.
 
-   cd tiktok-live-like-tracker (enter)
+### Stopping the App
+To stop the app, you can simply close the command prompt window that opens minimized when running the shortcut.
 
-3. Install Dependencies
-
-   Install the necessary dependencies using npm:
-
-   npm install (enter)
-
-   This command will install all the packages required by the project, as specified in the package.json file.
-
-Running the Application
-
-Once the dependencies are installed, you can start the development server:
-
-npm run dev (enter)
-
-This command starts the server. Then you can go to the application on any browser at http://localhost:8091.
-
-Usage
-
-1. Connect to TikTok Live Like Counter Tool
-
-   - Enter the TikTok username you want to connect to in the input field.
-   - Click the "Connect" button.
-
-2. View Top 5 Likers
-
-   - Once connected, the app will display the top 5 users who have sent the most likes in the specified's users TikTok Live in real-time.
-   - The list will automatically update every 3 seconds.
-
-3. Shuting Down Server, and Clearing Table
-
-   - Once connected, you will see button "Disconnect & Clear Table" - This will disconnet from the live and clear/reset the Top 5 Likers table.
-   - At any time, you will see button "Shutdown Server" - This will shutdown your server (npm run dev process), once pressed you may close your browser window safely.
-
-Note: You will have to start your server again "npm run dev" if "Shutdown Server" is pressed (recommended).
+## Supported Platforms
+Currently, this app is only supported on Windows.
