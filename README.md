@@ -1,5 +1,5 @@
 
-# Tiktok Live Tool
+# Tiktok Engage Tracker
 
 This application tracks likes and follows on TikTok Live events. Follow the instructions below to set up and run the app on Windows.
 
@@ -49,7 +49,7 @@ You need Node.js and npm installed to run this app. Follow these steps:
 ## Installation
 
 1. Create a folder called `Documents` in your `C:\` drive if it does not already exist.
-2. Download program from releases at https://github.com/Pagan-Idel/tiktok-live-like-tracker/releases
+2. Download program from releases at https://github.com/Pagan-Idel/tiktok-engage-tracker/releases
 3. Unzip and paste the program into your new Documents folder.
 
 ## Running the App

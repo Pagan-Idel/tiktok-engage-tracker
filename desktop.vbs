@@ -1,2 +1,2 @@
 Set objShell = CreateObject("WScript.Shell")
-objShell.Run "cmd /c C:\Documents\Tiktok-live-tool\run.bat", 7
+objShell.Run "cmd /c C:\Documents\tiktok-engage-tracker\run.bat", 7
